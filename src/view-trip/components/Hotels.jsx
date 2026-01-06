@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import useGoogleMapsLoader from "@/components/google-maps-API";
+import HotelCardItem from "./HotelCardItem";
 
 function Hotels({ trip, apiKey }) {
   const hotelOptions =
@@ -10,7 +11,6 @@ function Hotels({ trip, apiKey }) {
     [];
 
   const [hotelPhotos, setHotelPhotos] = useState({});
-  const placeholderImage = "/placeholder-hotel.jpeg";
 
   // Load Google Maps JS API
   useGoogleMapsLoader(apiKey);
@@ -78,60 +78,15 @@ function Hotels({ trip, apiKey }) {
         animate="visible"
         variants={containerVariants}
       >
-        {hotelOptions.map((hotel, index) => {
-          const photoUrl =
-            hotelPhotos[hotel.hotelName] ||
-            hotel.hotelImageURL ||
-            placeholderImage;
-
-          return (
-            <motion.a
-              key={index}
-              href={
-                "https://www.google.com/maps/search/?api=1&query=" +
-                encodeURIComponent(hotel.hotelName + ", " + hotel.hotelAddress)
-              }
-              target="_blank"
-              rel="noreferrer"
-              variants={cardVariants}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="cursor-pointer block rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white"
-            >
-              <div className="relative h-[180px] w-full bg-gray-200 animate-pulse">
-                <img
-                  src={photoUrl}
-                  alt={hotel.hotelName || "Hotel"}
-                  className="rounded-xl h-full w-full object-cover"
-                  loading="lazy"
-                  onLoad={(e) =>
-                    e.currentTarget.classList.remove("animate-pulse")
-                  }
-                />
-              </div>
-
-              <div className="my-2 flex flex-col gap-1 p-2">
-                <h2 className="font-medium text-md">
-                  {hotel.hotelName || "Unnamed Hotel"}
-                </h2>
-                {hotel.hotelAddress && (
-                  <h2 className="text-xs text-gray-500">
-                    📍 {hotel.hotelAddress}
-                  </h2>
-                )}
-                {(hotel.pricePerNight_RM || hotel.priceRange) && (
-                  <h2 className="text-sm">
-                    💰{" "}
-                    {hotel.pricePerNight_RM
-                      ? `${hotel.pricePerNight_RM} RM`
-                      : hotel.priceRange}
-                  </h2>
-                )}
-                {hotel.rating && <h2 className="text-sm">⭐ {hotel.rating}</h2>}
-              </div>
-            </motion.a>
-          );
-        })}
+        {hotelOptions.map((hotel, index) => (
+          <HotelCardItem
+            key={index}
+            index={index}
+            hotel={hotel}
+            photoUrl={hotelPhotos[hotel.hotelName]}
+            cardVariants={cardVariants}
+          />
+        ))}
       </motion.div>
     </div>
   );

@@ -3,34 +3,36 @@ import { motion } from "framer-motion";
 import { ArrowLeft, CalendarDays, CircleDollarSign, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { GetPlaceDetails } from "@/service/GlobalApi";
+
+const PHOTO_REF_URL =
+  "https://places.googleapis.com/v1/{NAME}/media?maxHeightPx=600&maxWidthPx=800&key=" +
+  import.meta.env.VITE_GOOGLE_PLACE_API_KEY;
 
 function InfoSection({ trip }) {
   const [photoUrl, setPhotoUrl] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (trip?.userSelection?.location?.label) {
-      loadPlacePhoto(trip.userSelection.location.label);
-    }
+    GetPlacePhoto();
   }, [trip]);
 
-  const loadPlacePhoto = async (placeName) => {
-    if (!window.google?.maps) {
-      setTimeout(() => loadPlacePhoto(placeName), 500);
-      return;
+  const GetPlacePhoto = async () => {
+    try {
+      const res = await GetPlaceDetails(trip?.userSelection?.location?.label);
+
+      const place = res?.places?.[0];
+      const photo = place?.photos?.[0];
+      if (!photo?.name) return;
+
+      const url = PHOTO_REF_URL.replace("{NAME}", photo.name);
+      setPhotoUrl(url);
+    } catch (err) {
+      console.error(
+        "Places API Error:",
+        JSON.stringify(err?.response?.data?.error, null, 2)
+      );
     }
-
-    const { PlacesService, PlacesServiceStatus } =
-      await window.google.maps.importLibrary("places");
-    const service = new PlacesService(document.createElement("div"));
-    const request = { query: placeName, fields: ["photos"] };
-
-    service.findPlaceFromQuery(request, (results, status) => {
-      if (status === PlacesServiceStatus.OK && results?.[0]?.photos?.length) {
-        const url = results[0].photos[0].getUrl({ maxWidth: 800 });
-        setPhotoUrl(url);
-      }
-    });
   };
 
   const fadeUp = {
