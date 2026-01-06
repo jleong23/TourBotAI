@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  CalendarDays,
-  CircleDollarSign,
-  Users,
-  Send,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, CalendarDays, CircleDollarSign, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -19,11 +14,8 @@ function InfoSection({ trip }) {
     }
   }, [trip]);
 
-  // Waits for the Google Maps SDK to load before using PlacesService
   const loadPlacePhoto = async (placeName) => {
-    // Wait until window.google and maps.places are available
     if (!window.google?.maps) {
-      // Retry after a short delay
       setTimeout(() => loadPlacePhoto(placeName), 500);
       return;
     }
@@ -31,66 +23,102 @@ function InfoSection({ trip }) {
     const { PlacesService, PlacesServiceStatus } =
       await window.google.maps.importLibrary("places");
     const service = new PlacesService(document.createElement("div"));
-    const request = {
-      query: placeName,
-      fields: ["photos"],
-    };
+    const request = { query: placeName, fields: ["photos"] };
 
     service.findPlaceFromQuery(request, (results, status) => {
-      if (status === PlacesServiceStatus.OK && results && results[0].photos) {
-        const url = results[0].photos[0].getUrl({ maxWidth: 800 }); // optional maxWidth
+      if (status === PlacesServiceStatus.OK && results?.[0]?.photos?.length) {
+        const url = results[0].photos[0].getUrl({ maxWidth: 800 });
         setPhotoUrl(url);
       }
     });
   };
 
+  const fadeUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+  const staggerChildren = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1 } },
+  };
+
   return (
-    <div>
-      <div className="relative">
-        <div className="absolute top-5 left-5">
-          <Button
-            variant="default"
-            size="icon"
-            iconSize="md"
-            className="!rounded-full !bg-white !text-gray-700 hover:!bg-gray-100 hover:!text-gray-900"
-            aria-label="Go Back"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeft />
-          </Button>
+    <motion.div
+      className="relative"
+      initial="hidden"
+      animate="visible"
+      variants={staggerChildren}
+    >
+      {/* Hero Image & Back Button */}
+      <motion.div className="relative" variants={fadeUp}>
+        <div className="absolute top-5 left-5 z-10">
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="default"
+              size="icon"
+              iconSize="md"
+              className="!rounded-full !bg-white !text-gray-700 hover:!bg-gray-100 hover:!text-gray-900 shadow-md"
+              aria-label="Go Back"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft />
+            </Button>
+          </motion.div>
         </div>
 
-        <img
+        <motion.img
           src={photoUrl || "/placeholder.jpeg"}
-          className="h-[340px] w-full object-cover rounded-xl"
+          className="h-[340px] w-full object-cover rounded-xl shadow-md"
           alt="Destination"
+          initial={{ scale: 1.05 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.8 }}
         />
-      </div>
+      </motion.div>
 
-      <div className="flex justify-between items-center mt-4">
-        <div className="flex flex-col gap-2">
+      {/* Trip Info */}
+      <motion.div
+        className="flex justify-between items-center mt-4 flex-col md:flex-row gap-4"
+        variants={fadeUp}
+      >
+        <motion.div className="flex flex-col gap-2" variants={fadeUp}>
           <h2 className="font-bold text-2xl">
             {trip?.userSelection?.location?.label}
           </h2>
-          <div className="flex flex-wrap gap-3 md:gap-5">
-            <div className="flex gap-2 p-1 px-3 bg-gray-200 rounded-full text-gray-500 text-xs md:text-md items-center">
+          <motion.div
+            className="flex flex-wrap gap-3 md:gap-5"
+            variants={staggerChildren}
+          >
+            {/* Days */}
+            <motion.div
+              className="flex gap-2 p-1 px-3 bg-gray-200 rounded-full text-gray-500 text-xs md:text-md items-center"
+              variants={fadeUp}
+            >
               <CalendarDays className="h-4 w-4" />
               <h2>{trip?.userSelection?.days} Days</h2>
-            </div>
+            </motion.div>
 
-            <div className="flex gap-2 p-1 px-3 bg-gray-200 rounded-full text-gray-500 text-xs md:text-md items-center">
+            {/* Budget */}
+            <motion.div
+              className="flex gap-2 p-1 px-3 bg-gray-200 rounded-full text-gray-500 text-xs md:text-md items-center"
+              variants={fadeUp}
+            >
               <CircleDollarSign className="h-4 w-4" />
               <h2>{trip?.userSelection?.budget} Budget</h2>
-            </div>
+            </motion.div>
 
-            <div className="flex gap-2 p-1 px-3 bg-gray-200 rounded-full text-gray-500 text-xs md:text-md items-center">
+            {/* Travelers */}
+            <motion.div
+              className="flex gap-2 p-1 px-3 bg-gray-200 rounded-full text-gray-500 text-xs md:text-md items-center"
+              variants={fadeUp}
+            >
               <Users className="h-4 w-4" />
               <h2>{trip?.userSelection?.traveler} Traveler</h2>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
 

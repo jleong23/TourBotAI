@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import useGoogleMapsLoader from "@/components/google-maps-API";
 
 function Hotels({ trip, apiKey }) {
@@ -50,11 +51,33 @@ function Hotels({ trip, apiKey }) {
     fetchPhotos();
   }, [hotelOptions]);
 
+  // Framer Motion variants
+  const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1 } },
+  };
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  };
+
   return (
     <div>
-      <h2 className="font-bold text-xl mt-5 mb-3">Hotel Recommendations</h2>
+      <motion.h2
+        className="font-bold text-xl mt-5 mb-3"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        Hotel Recommendations
+      </motion.h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+      <motion.div
+        className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
         {hotelOptions.map((hotel, index) => {
           const photoUrl =
             hotelPhotos[hotel.hotelName] ||
@@ -62,7 +85,7 @@ function Hotels({ trip, apiKey }) {
             placeholderImage;
 
           return (
-            <a
+            <motion.a
               key={index}
               href={
                 "https://www.google.com/maps/search/?api=1&query=" +
@@ -70,17 +93,25 @@ function Hotels({ trip, apiKey }) {
               }
               target="_blank"
               rel="noreferrer"
-              className="hover:scale-105 transition-all cursor-pointer block"
+              variants={cardVariants}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="cursor-pointer block rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white"
             >
-              <img
-                src={photoUrl}
-                alt={hotel.hotelName || "Hotel"}
-                className="rounded-xl h-[180px] w-full object-cover"
-                loading="lazy"
-              />
+              <div className="relative h-[180px] w-full bg-gray-200 animate-pulse">
+                <img
+                  src={photoUrl}
+                  alt={hotel.hotelName || "Hotel"}
+                  className="rounded-xl h-full w-full object-cover"
+                  loading="lazy"
+                  onLoad={(e) =>
+                    e.currentTarget.classList.remove("animate-pulse")
+                  }
+                />
+              </div>
 
-              <div className="my-2 flex flex-col gap-1">
-                <h2 className="font-medium">
+              <div className="my-2 flex flex-col gap-1 p-2">
+                <h2 className="font-medium text-md">
                   {hotel.hotelName || "Unnamed Hotel"}
                 </h2>
                 {hotel.hotelAddress && (
@@ -98,10 +129,10 @@ function Hotels({ trip, apiKey }) {
                 )}
                 {hotel.rating && <h2 className="text-sm">⭐ {hotel.rating}</h2>}
               </div>
-            </a>
+            </motion.a>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }
