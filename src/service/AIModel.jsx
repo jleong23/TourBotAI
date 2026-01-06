@@ -1,26 +1,18 @@
-// src/lib/AIModel.jsx (or wherever your AI model logic lives)
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
   apiKey: import.meta.env.VITE_GOOGLE_GEMINI_AI_API_KEY,
 });
 
-const model = 'gemini-2.5-pro';
+const model = "models/gemini-2.5-flash";
 
 const config = {
-  thinkingConfig: {
-    thinkingBudget: -1,
-  },
+  thinkingConfig: { thinkingBudget: -1 },
 };
 
 export const chatSession = {
   async sendMessage(prompt) {
-    const contents = [
-      {
-        role: 'user',
-        parts: [{ text: prompt }],
-      },
-    ];
+    const contents = [{ role: "user", parts: [{ text: prompt }] }];
 
     const response = await ai.models.generateContentStream({
       model,
@@ -28,9 +20,9 @@ export const chatSession = {
       contents,
     });
 
-    let result = '';
+    let result = "";
     for await (const chunk of response) {
-      result += chunk.text || '';
+      result += chunk.text || "";
     }
 
     return result;
