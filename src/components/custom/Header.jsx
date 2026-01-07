@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button.jsx";
 import { FcGoogle } from "react-icons/fc";
+import { IoMenu } from "react-icons/io5";
 import {
   Popover,
   PopoverContent,
@@ -53,44 +54,82 @@ const Header = () => {
       <div>
         {user ? (
           <div className="flex items-center gap-3">
-            <a href="/create-trip">
-              <Button
-                variant="outline"
-                className="!rounded-full !bg-slate-100 border-slate-500"
-              >
-                + Create Trip
-              </Button>
-            </a>
-            <a href="/my-trips">
-              <Button
-                variant="outline"
-                className="!rounded-full !bg-slate-100 border-slate-500"
-              >
-                My Trips
-              </Button>
-            </a>
-            <Popover>
-              <PopoverTrigger asChild>
-                <img
-                  src={user?.picture}
-                  className="h-[50px] w-[50px] rounded-full object-cover border"
-                  alt="Profile"
-                />
-              </PopoverTrigger>
-
-              <PopoverContent className="bg-white text-gray-900 border shadow-sm">
-                <h2
-                  className="cursor-pointer"
-                  onClick={() => {
-                    googleLogout();
-                    localStorage.clear();
-                    window.location.reload();
-                  }}
+            {/* Desktop View */}
+            <div className="hidden md:flex items-center gap-3">
+              <a href="/create-trip">
+                <Button
+                  variant="outline"
+                  className="!rounded-full !bg-slate-100 border-slate-500"
                 >
-                  Logout
-                </h2>
-              </PopoverContent>
-            </Popover>
+                  + Create Trip
+                </Button>
+              </a>
+              <a href="/my-trips">
+                <Button
+                  variant="outline"
+                  className="!rounded-full !bg-slate-100 border-slate-500"
+                >
+                  My Trips
+                </Button>
+              </a>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <img
+                    src={user?.picture}
+                    className="h-[50px] w-[50px] rounded-full object-cover border cursor-pointer"
+                    alt="Profile"
+                  />
+                </PopoverTrigger>
+
+                <PopoverContent className="bg-white text-gray-900 border shadow-sm">
+                  <h2
+                    className="cursor-pointer"
+                    onClick={() => {
+                      googleLogout();
+                      localStorage.clear();
+                      window.location.reload();
+                    }}
+                  >
+                    Logout
+                  </h2>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* Mobile View */}
+            <div className="md:hidden">
+              <Popover>
+                <PopoverTrigger>
+                  <IoMenu className="h-8 w-8 text-white" />
+                </PopoverTrigger>
+                <PopoverContent className="bg-white border shadow-sm w-48">
+                  <div className="flex flex-col gap-2">
+                    <a
+                      href="/create-trip"
+                      className="font-medium hover:bg-slate-100 p-2 rounded-md"
+                    >
+                      Create Trip
+                    </a>
+                    <a
+                      href="/my-trips"
+                      className="font-medium hover:bg-slate-100 p-2 rounded-md"
+                    >
+                      My Trips
+                    </a>
+                    <h2
+                      className="cursor-pointer font-medium hover:bg-slate-100 p-2 rounded-md text-red-500"
+                      onClick={() => {
+                        googleLogout();
+                        localStorage.clear();
+                        window.location.reload();
+                      }}
+                    >
+                      Logout
+                    </h2>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         ) : (
           <Button onClick={() => setOpenDialog(true)}>Sign In</Button>
