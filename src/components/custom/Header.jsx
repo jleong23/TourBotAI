@@ -1,8 +1,16 @@
 import React, { useEffect } from "react";
 import { Button } from "../ui/button.jsx";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { googleLogout } from "@react-oauth/google";
+import { useNavigation } from "react-router-dom";
 
 const Header = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+
   useEffect(() => {
     console.log(user);
   });
@@ -20,13 +28,29 @@ const Header = () => {
             >
               My Trips
             </Button>
-            <img
-              src={user?.picture}
-              className="h-[40px] w-[40px] rounded-full"
-            />
+            <Popover>
+              <PopoverTrigger>
+                <img
+                  src={user?.picture}
+                  className="h-[40px] w-[40px] rounded-full"
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <h2
+                  className="cursor-pointer"
+                  onClick={() => {
+                    googleLogout();
+                    localStorage.clear();
+                    window.location.reload();
+                  }}
+                >
+                  Logout
+                </h2>
+              </PopoverContent>
+            </Popover>
           </div>
         ) : (
-          <Button>Sign In</Button>
+          <Button>Get Started</Button>
         )}
       </div>
     </div>
