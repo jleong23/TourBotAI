@@ -9,10 +9,12 @@ function PlaceToVisit({ trip }) {
       <div className="mt-4 space-y-8">
         {trip?.tripData?.itinerary?.map((item, index) => (
           <div key={index} className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800">{item.date}</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Day {item.day} : {item.theme}
+            </h3>
 
             <div className="grid gap-6 md:grid-cols-2">
-              {item.dailyPlan?.map((place, i) => (
+              {item.activities?.map((place, i) => (
                 <div key={i}>
                   {place.bestTimeToVisit && (
                     <p className="text-xs font-medium text-orange-700 mb-1">

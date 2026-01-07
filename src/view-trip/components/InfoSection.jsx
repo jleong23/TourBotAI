@@ -11,7 +11,9 @@ function InfoSection({ trip }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    GetPlacePhoto();
+    if (trip?.userSelection?.location?.label) {
+      GetPlacePhoto();
+    }
   }, [trip]);
 
   const GetPlacePhoto = async () => {
