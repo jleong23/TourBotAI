@@ -10,21 +10,23 @@ function PlaceToVisit({ trip }) {
         {trip?.tripData?.itinerary?.map((item, index) => (
           <div key={index} className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-800">
-              Day {item.day} : {item.theme}
+              Day {item.day || item.dayNumber} : {item.theme}
             </h3>
 
             <div className="grid gap-6 md:grid-cols-2">
-              {(item.plan || item.activities)?.map((place, i) => (
-                <div key={i}>
-                  {place.bestTimeToVisit && (
-                    <p className="text-xs font-medium text-orange-700 mb-1">
-                      Best time: {place.bestTimeToVisit}
-                    </p>
-                  )}
+              {(item.plan || item.activities || item.places)?.map(
+                (place, i) => (
+                  <div key={i}>
+                    {place.bestTimeToVisit && (
+                      <p className="text-xs font-medium text-orange-700 mb-1">
+                        Best time: {place.bestTimeToVisit}
+                      </p>
+                    )}
 
-                  <PlaceCardItem place={place} />
-                </div>
-              ))}
+                    <PlaceCardItem place={place} />
+                  </div>
+                )
+              )}
             </div>
           </div>
         ))}
