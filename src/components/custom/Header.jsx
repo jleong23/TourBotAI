@@ -70,13 +70,15 @@ const Header = () => {
               </Button>
             </a>
             <Popover>
-              <PopoverTrigger>
+              <PopoverTrigger asChild>
                 <img
                   src={user?.picture}
-                  className="h-[40px] w-[40px] rounded-full"
+                  className="h-[50px] w-[50px] rounded-full object-cover border"
+                  alt="Profile"
                 />
               </PopoverTrigger>
-              <PopoverContent>
+
+              <PopoverContent className="bg-white text-gray-900 border shadow-sm">
                 <h2
                   className="cursor-pointer"
                   onClick={() => {
@@ -93,22 +95,24 @@ const Header = () => {
         ) : (
           <Button onClick={() => setOpenDialog(true)}>Sign In</Button>
         )}
-        <Dialog open={openDialog}>
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="sr-only">Sign in with Google</DialogTitle>
+
               <DialogDescription asChild>
                 <div>
                   <h2 className="font-bold text-lg mt-7">
                     Sign in With Google
                   </h2>
                   <p>Sign in to the App with Google Authentication securely.</p>
-                  <Button
+
+                  <button
                     className="mt-5 w-full flex gap-4 items-center justify-center bg-red-600 text-white hover:bg-red-700"
                     onClick={login}
                   >
                     <FcGoogle className="h-7 w-7" /> Sign in with Google
-                  </Button>
+                  </button>
                 </div>
               </DialogDescription>
             </DialogHeader>
