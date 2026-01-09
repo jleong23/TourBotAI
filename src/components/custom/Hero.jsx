@@ -24,7 +24,7 @@ const Hero = () => {
         </Link>
 
         <img
-          src="/landing.png"
+          src="/landing.jpeg"
           className="-mt-20 shadow-md border-slate-600 rounded-md "
           alt=""
         />
