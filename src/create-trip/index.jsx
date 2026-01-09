@@ -176,6 +176,7 @@ function CreateTrip() {
               apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
               selectProps={{
                 place,
+                placeholder: "Please type your destination",
                 onChange: (v) => {
                   setPlace(v);
                   handleInputChange("location", v);
@@ -191,7 +192,7 @@ function CreateTrip() {
               <h2 className="text-xl my-3 font-medium">Number of Days</h2>
             </div>
             <Input
-              placeholder="Ex. 3"
+              placeholder="Please type number of days"
               type="number"
               onChange={(e) => handleInputChange("days", e.target.value)}
             />
