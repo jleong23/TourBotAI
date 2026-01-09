@@ -4,32 +4,39 @@ import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
-    <>
-      <div className="flex flex-col mx-5 md:mx-56 gap-9 items-center h-screen">
-        <h1 className="font-extrabold text-center text-[20px] md:text-[60px] s:text-[30px] mt-15">
-          <span className="text-purple-500">
-            Discover Your Next Adventure with A
-          </span>
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-slate-50">
+      <div className="max-w-6xl px-6 md:px-12 flex flex-col items-center text-center gap-8">
+        {/* Heading */}
+        <h1 className="font-extrabold tracking-tight text-3xl sm:text-4xl md:text-6xl leading-tight">
+          <span className="text-purple-600">Discover Your Next Adventure</span>
           <br />
-          AI Personalised intinary
+          with an AI-Personalised Itinerary
         </h1>
 
-        <p className="text-xl md:text-2xl text-gray-500 text-center">
-          Your AI-Powered trip planner and travel curator, designed to create
-          custom itineraries tailored to your interest and budget
+        {/* Subheading */}
+        <p className="max-w-3xl text-base sm:text-lg md:text-xl text-gray-600">
+          Your AI-powered trip planner and travel curator, built to design
+          personalised itineraries tailored to your interests, schedule, and
+          budget.
         </p>
 
-        <Link to={"/create-trip"}>
-          <Button>Get Started. It's Free</Button>
+        {/* CTA */}
+        <Link to="/create-trip">
+          <Button className="px-8 py-6 text-lg font-semibold rounded-xl shadow-md hover:shadow-lg transition">
+            Get Started — It’s Free
+          </Button>
         </Link>
 
-        <img
-          src="/landing.jpeg"
-          className="-mt-20 shadow-md border-slate-600 rounded-md "
-          alt=""
-        />
+        {/* Hero Image */}
+        <div className="w-full mt-10 flex justify-center">
+          <img
+            src="/landing.jpeg"
+            alt="AI travel planning illustration"
+            className="w-full max-w-4xl rounded-2xl shadow-xl border border-slate-200"
+          />
+        </div>
       </div>
-    </>
+    </section>
   );
 };
 
