@@ -20,9 +20,10 @@ function PlaceToVisit({ trip }) {
               {(item.plan || item.activities || item.places)?.map(
                 (place, i) => (
                   <div key={i}>
-                    {place.bestTimeToVisit && (
+                    {(place.bestTimeToVisit || place.best_time_to_visit) && (
                       <p className="text-xs font-medium text-orange-700 mb-1">
-                        Best time: {place.bestTimeToVisit}
+                        Best time:{" "}
+                        {place.bestTimeToVisit || place.best_time_to_visit}
                       </p>
                     )}
 

@@ -5,14 +5,22 @@ import { motion } from "framer-motion";
 function HotelCardItem({ hotel, index, cardVariants }) {
   const [photoUrl, setPhotoUrl] = useState();
 
+  const hotelName = hotel?.hotelName || hotel?.hotel_name;
+  const hotelAddress = hotel?.hotelAddress || hotel?.hotel_address;
+  const hotelPrice =
+    hotel?.pricePerNight_RM ||
+    hotel?.price_per_night_rm ||
+    hotel?.priceRange ||
+    hotel?.price;
+
   useEffect(() => {
-    if (!hotel?.hotelName || !window.google?.maps) return;
+    if (!hotelName || !window.google?.maps) return;
 
     const service = new window.google.maps.places.PlacesService(
       document.createElement("div")
     );
     const request = {
-      query: `${hotel.hotelName}, ${hotel.hotelAddress}`,
+      query: `${hotelName}, ${hotelAddress}`,
       fields: ["photos"],
     };
 
@@ -25,12 +33,12 @@ function HotelCardItem({ hotel, index, cardVariants }) {
         setPhotoUrl(url);
       }
     });
-  }, [hotel]);
+  }, [hotel, hotelName, hotelAddress]);
 
   return (
     <motion.a
       key={index}
-      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.hotelName + ", " + hotel.hotelAddress)}`}
+      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotelName + ", " + hotelAddress)}`}
       target="_blank"
       rel="noreferrer"
       variants={cardVariants}
@@ -40,8 +48,13 @@ function HotelCardItem({ hotel, index, cardVariants }) {
     >
       <div className="relative h-[180px] w-full bg-gray-200 animate-pulse">
         <img
-          src={photoUrl || "/placeholder-hotel.jpeg"}
-          alt={hotel.hotelName || "Hotel"}
+          src={
+            photoUrl ||
+            hotel?.hotelImageUrl ||
+            hotel?.hotel_image_url ||
+            "/placeholder-hotel.jpeg"
+          }
+          alt={hotelName || "Hotel"}
           className="rounded-xl h-full w-full object-cover"
           loading="lazy"
           onLoad={(e) => e.currentTarget.classList.remove("animate-pulse")}
@@ -49,18 +62,16 @@ function HotelCardItem({ hotel, index, cardVariants }) {
       </div>
 
       <div className="my-2 flex flex-col gap-1 p-2">
-        <h2 className="font-medium text-md">
-          {hotel.hotelName || "Unnamed Hotel"}
-        </h2>
-        {hotel.hotelAddress && (
-          <h2 className="text-xs text-gray-500">📍 {hotel.hotelAddress}</h2>
+        <h2 className="font-medium text-md">{hotelName || "Unnamed Hotel"}</h2>
+        {hotelAddress && (
+          <h2 className="text-xs text-gray-500">📍 {hotelAddress}</h2>
         )}
-        {(hotel.pricePerNight_RM || hotel.priceRange) && (
+        {hotelPrice && (
           <h2 className="text-sm">
-            💰{" "}
-            {hotel.pricePerNight_RM
-              ? `${hotel.pricePerNight_RM} RM`
-              : hotel.priceRange}
+            💰 {hotelPrice}{" "}
+            {typeof hotelPrice === "number" || !isNaN(Number(hotelPrice))
+              ? "RM"
+              : ""}
           </h2>
         )}
         {hotel.rating && <h2 className="text-sm">⭐ {hotel.rating}</h2>}

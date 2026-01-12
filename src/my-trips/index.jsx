@@ -27,9 +27,11 @@ function MyTrips() {
 
     const querySnapshot = await getDocs(q);
 
+    const newTrips = [];
     querySnapshot.forEach((doc) => {
-      setUserTrips((prev) => [...prev, doc.data()]);
+      newTrips.push(doc.data());
     });
+    setUserTrips(newTrips);
   };
 
   // Animation variants

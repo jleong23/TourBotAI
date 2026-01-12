@@ -9,6 +9,7 @@ function Hotels({ trip, apiKey }) {
   const hotelOptions =
     trip?.tripData?.travelPlan?.hotelOptions ||
     trip?.tripData?.hotelOptions ||
+    trip?.tripData?.hotels_options ||
     trip?.tripData?.hotels ||
     [];
 

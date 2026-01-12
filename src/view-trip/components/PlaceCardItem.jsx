@@ -4,13 +4,15 @@ import React, { useEffect, useState } from "react";
 function PlaceCardItem({ place }) {
   const [photoUrl, setPhotoUrl] = useState();
 
+  const placeName = place.placeName || place.place_name;
+
   useEffect(() => {
-    if (!place?.placeName || !window.google?.maps) return;
+    if (!placeName || !window.google?.maps) return;
 
     const service = new window.google.maps.places.PlacesService(
       document.createElement("div")
     );
-    const request = { query: place.placeName, fields: ["photos"] };
+    const request = { query: placeName, fields: ["photos"] };
 
     service.findPlaceFromQuery(request, (results, status) => {
       if (
@@ -21,24 +23,24 @@ function PlaceCardItem({ place }) {
         setPhotoUrl(url);
       }
     });
-  }, [place]);
+  }, [place, placeName]);
 
   return (
     <a
-      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.placeName)}`}
+      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(placeName)}`}
       target="_blank"
       rel="noreferrer"
     >
       <div className="border rounded-2xl p-4 flex gap-4 bg-white hover:shadow-lg cursor-pointer">
         <img
-          src={photoUrl || place.imageUrl || "/placeholder.jpeg"}
-          alt={place.placeName}
+          src={
+            photoUrl || place.imageUrl || place.image_url || "/placeholder.jpeg"
+          }
+          alt={placeName}
           className="w-[110px] h-[110px] object-cover rounded-xl"
         />
         <div className="flex flex-col justify-between">
-          <h2 className="font-semibold text-base text-gray-900">
-            {place.placeName}
-          </h2>
+          <h2 className="font-semibold text-base text-gray-900">{placeName}</h2>
         </div>
       </div>
     </a>
